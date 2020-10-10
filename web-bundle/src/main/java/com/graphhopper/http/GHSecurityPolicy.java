@@ -2,13 +2,15 @@ package com.graphhopper.http;
 
 import java.lang.reflect.ReflectPermission;
 import java.net.SocketPermission;
-import java.security.CodeSource;
-import java.security.PermissionCollection;
-import java.security.Permissions;
-import java.security.Policy;
+import java.security.*;
 import java.util.PropertyPermission;
 
 public class GHSecurityPolicy extends Policy {
+
+    @Override
+    public boolean implies(ProtectionDomain domain, Permission permission) {
+        return super.implies(domain, permission);
+    }
 
     @Override
     public PermissionCollection getPermissions(CodeSource codesource) {
@@ -36,6 +38,8 @@ public class GHSecurityPolicy extends Policy {
 
         // why do we need that for an API request?
         p.add(new RuntimePermission("accessDeclaredMembers"));
+        // TODO NOW
+//        p.setReadOnly();
         return p;
     }
 }
