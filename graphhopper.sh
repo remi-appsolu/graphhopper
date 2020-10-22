@@ -102,6 +102,10 @@ if [ ! -f "config.yml" ]; then
 fi
 
 function ensureOsm { 
+  if [ -f "$OSM_FILE" ]; then
+    return
+  fi
+
   if [ "$OSM_FILE" = "" ]; then
     # skip
     return
@@ -158,7 +162,7 @@ function ensureMaven {
 
 function execMvn {
   ensureMaven
-  "$MAVEN_HOME/bin/mvn" "$@" > /tmp/graphhopper-compile.log
+  "$MAVEN_HOME/bin/mvn" "$@" #> /tmp/graphhopper-compile.log
   returncode=$?
   if [[ $returncode != 0 ]] ; then
     echo "## compilation of parent failed"
@@ -172,6 +176,7 @@ function packageJar {
     echo "## building graphhopper jar: $JAR"
     echo "## using maven at $MAVEN_HOME"
     execMvn --projects web -am -DskipTests=true package
+    echo "## built graphhopper jar: $JAR"
   else
     echo "## existing jar found $JAR"
   fi
@@ -238,7 +243,7 @@ else
    LINK="http://download.geofabrik.de/$LINK-latest.osm.pbf"
 fi
 
-: "${JAVA_OPTS:=-Xmx1000m -Xms1000m}"
+: "${JAVA_OPTS:=-Xmx8000m -Xms8000m}"
 : "${JAR:=web/target/graphhopper-web-$VERSION.jar}"
 : "${GRAPH:=$DATADIR/$NAME-gh}"
 

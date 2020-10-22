@@ -1,24 +1,23 @@
-FROM maven:3.6.3-jdk-8 as build
+FROM openjdk:11.0-jdk
+#FROM openjdk:8-jdk
 
-RUN apt-get install -y wget
+ENV JAVA_OPTS "-server -Xconcurrentio -Xmx1g -Xms1g -XX:+UseG1GC -Ddw.server.applicationConnectors[0].bindHost=0.0.0.0 -Ddw.server.applicationConnectors[0].port=8989"
+
+RUN mkdir -p /data && mkdir -p /graphhopper
+
+# install node - only required for JS UI
+#RUN apt-get install -y wget \
+#       && curl -sL https://deb.nodesource.com/setup_11.x | bash - \
+#       && apt-get install -y nodejs
+
+COPY . /graphhopper/
 
 WORKDIR /graphhopper
 
-COPY . .
+# create main.js - only required for JS UI
+#RUN cd web && npm install && npm run bundleProduction && cd ..
 
 RUN ./graphhopper.sh build
-
-FROM openjdk:11.0-jre
-
-ENV JAVA_OPTS "-Xmx1g -Xms1g -Ddw.server.application_connectors[0].bind_host=0.0.0.0 -Ddw.server.application_connectors[0].port=8989"
-
-RUN mkdir -p /data
-
-WORKDIR /graphhopper
-
-COPY --from=build /graphhopper/web/target/*.jar ./web/target/
-# pom.xml is used to get the jar file version. see https://github.com/graphhopper/graphhopper/pull/1990#discussion_r409438806
-COPY ./graphhopper.sh ./pom.xml ./config-example.yml ./
 
 VOLUME [ "/data" ]
 
@@ -26,4 +25,4 @@ EXPOSE 8989
 
 ENTRYPOINT [ "./graphhopper.sh", "web" ]
 
-CMD [ "/data/europe_germany_berlin.pbf" ]
+CMD [ "/data/europe_france.pbf" ]
