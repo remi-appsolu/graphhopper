@@ -1,0 +1,18 @@
+; Graphhopper systemd service unit file
+[Unit]
+Description=Graphhopper
+Requires=network.target
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/graphhopper
+User=root
+;EnvironmentFile=-/etc/graphhopper.conf
+ExecStart=/opt/graphhopper/graphhopper.sh -a web -i /opt/graphhopper/:wqeurope_france.pbf graphhopper 
+;ExecStop=/bin/kill -TERM \$MAINPID
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

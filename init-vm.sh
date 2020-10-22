@@ -1,12 +1,13 @@
 #!/bin/bash
+# tuto : https://cloud.google.com/load-balancing/docs/https/ext-http-lb-simple?hl=fr#console
 
-apt update
-apt install xz-utils tar wget git
+apt-get update
+apt-get --assume-yes install xz-utils tar wget git openjdk-11-jdk maven
 
 mkdir -p /opt
 cd /opt
 echo "cloning"
-git clone https://github.com/remi-appsolu/graphhopper.git/
+git clone -q https://github.com/remi-appsolu/graphhopper.git/
 cd /opt/graphhopper
 git checkout 2.x
 
@@ -34,6 +35,13 @@ fi
 
 echo "Building GraphHopper"
 ./graphhopper.sh build
-echo "Builded GraphHopper, STARTING"
-./graphhopper.sh -a web -i europe_france.pbf
+echo "Builded GraphHopper"
 
+# pour demarrage direct
+#./graphhopper.sh -a web -i europe_france.pbf
+
+# pour demarrage par service
+cp /opt/graphhopper/graphhopper.service /etc/systemd/system/
+
+systemctl enable graphhopper.service
+systemctl start graphhopper.service 
