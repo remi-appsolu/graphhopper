@@ -163,8 +163,7 @@ public class DistanceMatrixResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response doPost(@NotNull GHMRequest request, @Context HttpServletRequest httpReq) {
         StopWatch sw = new StopWatch().start();
-        String weightingVehicleLogStr = "weighting: " + request.getHints().getString("weighting", "")
-                + ", vehicle: " + request.getHints().getString("vehicle", "");
+        String weightingVehicleLogStr = "weighting: " + request.getHints().getString("weighting", "") + ", vehicle: " + request.getHints().getString("vehicle", "");
         if (Helper.isEmpty(request.getProfile())) {
             //enableEdgeBasedIfThereAreCurbsides(request.getCurbsides(), request);
             request.setProfile(profileResolver.resolveProfile(request.getHints()).getName());
@@ -172,10 +171,11 @@ public class DistanceMatrixResource {
         }
         errorIfLegacyParameters(request.getHints());
         MatrixResponse ghResponse = graphHopper.matrix(request);
-        boolean instructions = request.getHints().getBool(INSTRUCTIONS, true);
+        /*boolean instructions = request.getHints().getBool(INSTRUCTIONS, true);
         boolean enableElevation = request.getHints().getBool("elevation", false);
         boolean calcPoints = request.getHints().getBool(CALC_POINTS, true);
         boolean pointsEncoded = request.getHints().getBool("points_encoded", true);
+        */
 
         long took = sw.stop().getNanos() / 1_000_000;
         String infoStr = httpReq.getRemoteAddr() + " " + httpReq.getLocale() + " " + httpReq.getHeader("User-Agent");
@@ -188,13 +188,10 @@ public class DistanceMatrixResource {
             logger.error(logStr + ", errors:" + ghResponse.getErrors());
             throw new MultiException(ghResponse.getErrors());
         } else {
-            /*logger.info(logStr + ", alternatives: " + ghResponse.getAll().size()
-                    + ", distance0: " + ghResponse.getBest().getDistance()
-                    + ", weight0: " + ghResponse.getBest().getRouteWeight()
-                    + ", time0: " + Math.round(ghResponse.getBest().getTime() / 60000f) + "min"
-                    + ", points0: " + ghResponse.getBest().getPoints().getSize()
+            logger.info(logStr + ", times: " + ghResponse.getTimes().length
+                    + ", distances: " + ghResponse.getDistances().length
                     + ", debugInfo: " + ghResponse.getDebugInfo());
-            */
+
             return Response.ok(ghResponse /*WebHelper.jsonObject(ghResponse, instructions, calcPoints, enableElevation, pointsEncoded, took)*/).
                     header("X-GH-Took", "" + Math.round(took)).
                     type(MediaType.APPLICATION_JSON).

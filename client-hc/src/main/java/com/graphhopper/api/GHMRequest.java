@@ -73,7 +73,8 @@ public class GHMRequest extends GHRequest {
 
     @Override
     public List<GHPoint> getPoints() {
-        throw new IllegalStateException("use getFromPoints or getToPoints");
+        return super.getPoints();
+        //throw new IllegalStateException("use getFromPoints or getToPoints");
     }
 
     public GHMRequest addFromPoint(GHPoint point) {
@@ -117,7 +118,8 @@ public class GHMRequest extends GHRequest {
 
     @Override
     public List<String> getPointHints() {
-        throw new IllegalStateException("Use getFromPointHints or getToPointHints");
+        return super.getPointHints();
+        //throw new IllegalStateException("Use getFromPointHints or getToPointHints");
     }
 
     public GHRequest addFromPointHint(String pointHint) {
@@ -187,7 +189,8 @@ public class GHMRequest extends GHRequest {
 
     @Override
     public List<String> getCurbsides() {
-        throw new IllegalStateException("Use getFromCurbsides or getToCurbsides");
+        return super.getCurbsides();
+        //throw new IllegalStateException("Use getFromCurbsides or getToCurbsides");
     }
 
     /**

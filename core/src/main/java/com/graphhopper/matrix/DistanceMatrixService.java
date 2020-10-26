@@ -103,6 +103,7 @@ public class DistanceMatrixService {
                     "\nThe following profiles do support turn costs: " + getTurnCostProfiles());*/
         // todo later: should we be able to control this using the edge_based parameter?
         TraversalMode traversalMode = profile.isTurnCosts() ? TraversalMode.EDGE_BASED : TraversalMode.NODE_BASED;
+        //traversalMode = TraversalMode.EDGE_BASED;
         final int uTurnCostsInt = request.getHints().getInt(Parameters.Routing.U_TURN_COSTS, INFINITE_U_TURN_COSTS);
         if (uTurnCostsInt != INFINITE_U_TURN_COSTS && !traversalMode.isEdgeBased()) {
             throw new IllegalArgumentException("Finite u-turn costs can only be used for edge-based routing, you need to use a profile that" +
@@ -119,7 +120,8 @@ public class DistanceMatrixService {
         Weighting weighting = createWeighting(profile, request.getHints(), request.getPoints(), useCH);
 
         AlgorithmOptions algoOpts = AlgorithmOptions.start().
-                algorithm(ASTAR_BI/*request.getAlgorithm()*/).
+                //algorithm(ASTAR_BI/*request.getAlgorithm()*/).
+                algorithm(DIJKSTRA_BI).
                 traversalMode(traversalMode).
                 weighting(weighting).
                 maxVisitedNodes(maxVisitedNodesForRequest).
@@ -127,9 +129,12 @@ public class DistanceMatrixService {
                 build();
 
         algoOpts.getHints().putObject("calc_paths", false);
-        algoOpts.getHints().putObject("instructions", false);
+        algoOpts.getHints().putObject(INSTRUCTIONS, false);
+        algoOpts.getHints().putObject(CALC_POINTS, false);
+        // A verifier si plus rapide
+        //algoOpts.getHints().putObject("elevation", false);
 
-        response = routeVia2(request, algoOpts, profile, weighting, traversalMode, passThrough, forceCurbsides, disableCH, disableLM);
+        response = routeVia2(request, algoOpts, profile, weighting, traversalMode, useCH);
 /*
         for (int i = 0; i< request.getFromPoints().size(); i++) {
             int[] distances = new int[request.getToPoints().size()];
@@ -150,7 +155,7 @@ public class DistanceMatrixService {
         return response;
     }
 
-    protected MatrixResponse routeVia2(GHMRequest request, AlgorithmOptions algoOpts, Profile profile, Weighting weighting, TraversalMode traversalMode, boolean passThrough, boolean forceCurbsides, boolean disableCH, boolean disableLM){
+    protected MatrixResponse routeVia2(GHMRequest request, AlgorithmOptions algoOpts, Profile profile, Weighting weighting, TraversalMode traversalMode, boolean useCH){
         //AlgorithmOptions.Builder algoOptsBuilder = buildOptions(request, hopper);
 
         //AlgorithmOptions tmpOptions = algoOptsBuilder.build();
@@ -181,18 +186,25 @@ public class DistanceMatrixService {
         int[] originNodes =  mapToNodes(originQNodes);
         int[] destinationNodes =  mapToNodes(destinationQNodes);
 
-        OneToOneLoopMatrixAlgorithm algo = new OneToOneLoopMatrixAlgorithm(queryGraph, weighting.getFlagEncoder(), weighting, traversalMode, algoOpts);
+        algoOpts.getHints().putObject(INSTRUCTIONS, false);
+        algoOpts.getHints().putObject(CALC_POINTS, false);
+
+
+        OneToOneLoopMatrixAlgorithm algo;
+        if (useCH) {
+            algo = new OneToOneLoopMatrixAlgorithm(queryGraph, weighting.getFlagEncoder(), weighting, traversalMode, algoOpts, createCHPathCalculator(queryGraph, profile, algoOpts.getHints()));
+        }
+        else {
+            algo = new OneToOneLoopMatrixAlgorithm(queryGraph, weighting.getFlagEncoder(), weighting, traversalMode, algoOpts);
+        }
         MatrixResponse response = algo.calcMatrix(originNodes, destinationNodes);
         return response;
 
         /*MatrixAlgorithm algorithm = matrixAlgorithmFactory.createAlgo(queryGraph, algoOpts);
         DistanceMatrix matrix = algorithm.calcMatrix(originNodes, destinationNodes);
-
         GHMatrixResponse response = toResponse(matrix, request);
-
          */
     }
-
 
     protected GHResponse routeVia(List<GHPoint> points, AlgorithmOptions algoOpts, Weighting weighting, Profile profile, boolean passThrough, boolean forceCurbsides, boolean disableCH, boolean disableLM) {
         GHResponse ghRsp = new GHResponse();
@@ -393,3 +405,4 @@ public class DistanceMatrixService {
         return turnCostProfiles;
     }
 }
+

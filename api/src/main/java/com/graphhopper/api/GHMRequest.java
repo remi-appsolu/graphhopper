@@ -118,7 +118,8 @@ public class GHMRequest extends GHRequest {
 
     @Override
     public List<String> getPointHints() {
-        throw new IllegalStateException("Use getFromPointHints or getToPointHints");
+        return super.getPointHints();
+        //throw new IllegalStateException("Use getFromPointHints or getToPointHints");
     }
 
     public GHRequest addFromPointHint(String pointHint) {

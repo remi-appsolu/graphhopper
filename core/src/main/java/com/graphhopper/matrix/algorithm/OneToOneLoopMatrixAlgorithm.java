@@ -8,6 +8,8 @@ import com.graphhopper.routing.util.TraversalMode;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
 
+import java.util.List;
+
 /**
  * This implementation will just run a plain route algorithm for
  * each origin-destination combination. The used route algorithm can be
@@ -23,8 +25,16 @@ import com.graphhopper.storage.Graph;
  */
 public class OneToOneLoopMatrixAlgorithm extends AbstractMatrixAlgorithm {
 
-    private final RoutingAlgorithmFactory routingFactory = new RoutingAlgorithmFactorySimple();
+    private final RoutingAlgorithmFactory routingFactory;
     private final AlgorithmOptions routingAlgoOptions;
+    private final PathCalculator pathCalculator;
+
+    public OneToOneLoopMatrixAlgorithm(Graph graph, FlagEncoder encoder, Weighting weighting, TraversalMode traversalMode, AlgorithmOptions routingAlgoOptions) {
+        super(graph, encoder, weighting, traversalMode);
+        this.routingAlgoOptions = routingAlgoOptions;
+        this.routingFactory = new RoutingAlgorithmFactorySimple();
+        this.pathCalculator = null;
+    }
 
 
     /**
@@ -34,9 +44,11 @@ public class OneToOneLoopMatrixAlgorithm extends AbstractMatrixAlgorithm {
      * @param traversalMode         how the graph is traversed e.g. if via nodes or edges.
      * @param routingAlgoOptions    the route algorithm options used for each route request
      */
-    public OneToOneLoopMatrixAlgorithm(Graph graph, FlagEncoder encoder, Weighting weighting, TraversalMode traversalMode, AlgorithmOptions routingAlgoOptions) {
+    public OneToOneLoopMatrixAlgorithm(Graph graph, FlagEncoder encoder, Weighting weighting, TraversalMode traversalMode, AlgorithmOptions routingAlgoOptions, PathCalculator pathCalculator) {
         super(graph, encoder, weighting, traversalMode);
         this.routingAlgoOptions = routingAlgoOptions;
+        this.routingFactory = null;
+        this.pathCalculator = pathCalculator;
     }
 
     @Override
@@ -52,27 +64,37 @@ public class OneToOneLoopMatrixAlgorithm extends AbstractMatrixAlgorithm {
         int[] distances;
         long[] times;
         double[] weights = null;
+        EdgeRestrictions edgeRestrictions = new EdgeRestrictions();
         for (int i=0;i<origins.length;i++) {
             distances = new int[destinations.length];
             times = new long[destinations.length];
-            if (withWeights) weights = new double[destinations.length];
+            //if (withWeights) weights = new double[destinations.length];
 
             int origin = origins[i];
             for (int j=0;j<destinations.length;j++) {
-                RoutingAlgorithm algorithm = routingFactory.createAlgo(graph, routingAlgoOptions);
-                Path path = algorithm.calcPath(origin, destinations[j]);
+                Path path = null;
+                if (routingFactory != null) {
+                    RoutingAlgorithm algorithm = routingFactory.createAlgo(graph, routingAlgoOptions);
+                    path = algorithm.calcPath(origin, destinations[j]);
+                }
+                else {
+                    List<Path> paths = pathCalculator.calcPaths(origin, destinations[j], edgeRestrictions);
+                    if (paths != null) {
+                        path = paths.get(0);
+                    }
+                }
 
                 if (path != null){
                     distances[j] = (int) path.getDistance();
                     times[j] = path.getTime();
-                    if (withWeights) weights[j] = path.getWeight();
+                    //if (withWeights) weights[j] = path.getWeight();
                 }
 
                 //matrix.setCell(i, j, path.getDistance(), path.getTime(), path.getWeight());
             }
             matrix.setDistanceRow(i, distances);
             matrix.setTimeRow(i, times);
-            if (withWeights) matrix.setWeightRow(i, weights);
+            //if (withWeights) matrix.setWeightRow(i, weights);
         }
 
 
