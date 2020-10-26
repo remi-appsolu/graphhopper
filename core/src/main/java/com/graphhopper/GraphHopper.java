@@ -17,9 +17,12 @@
  */
 package com.graphhopper;
 
+import com.graphhopper.api.GHMRequest;
+import com.graphhopper.api.MatrixResponse;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.LMProfile;
 import com.graphhopper.config.Profile;
+import com.graphhopper.matrix.*;
 import com.graphhopper.reader.DataReader;
 import com.graphhopper.reader.dem.*;
 import com.graphhopper.reader.osm.conditional.DateRangeParser;
@@ -1192,5 +1195,38 @@ public class GraphHopper implements GraphHopperAPI {
 
     public RouterConfig getRouterConfig() {
         return routerConfig;
+    }
+
+
+    private DistanceMatrixService createMatrix() {
+        if (ghStorage == null || !fullyLoaded)
+            throw new IllegalStateException("Do a successful call to load or importOrLoad before routing");
+        if (ghStorage.isClosed())
+            throw new IllegalStateException("You need to create a new GraphHopper instance as it is already closed");
+        if (locationIndex == null)
+            throw new IllegalStateException("Location index not initialized");
+
+        Map<String, CHGraph> chGraphs = new LinkedHashMap<>();
+        for (CHProfile chProfile : chPreparationHandler.getCHProfiles()) {
+            String chGraphName = chPreparationHandler.getPreparation(chProfile.getProfile()).getCHConfig().getName();
+            chGraphs.put(chProfile.getProfile(), ghStorage.getCHGraph(chGraphName));
+        }
+        Map<String, LandmarkStorage> landmarks = new LinkedHashMap<>();
+        for (LMProfile lmp : lmPreparationHandler.getLMProfiles()) {
+            landmarks.put(lmp.getProfile(),
+                    lmp.usesOtherPreparation()
+                            // cross-querying
+                            ? lmPreparationHandler.getPreparation(lmp.getPreparationProfile()).getLandmarkStorage()
+                            : lmPreparationHandler.getPreparation(lmp.getProfile()).getLandmarkStorage());
+        }
+        return new DistanceMatrixService(ghStorage, locationIndex, profilesByName, pathBuilderFactory,
+                trMap, routerConfig, createWeightingFactory(), chGraphs, landmarks
+        );
+    }
+
+    @Override
+    public MatrixResponse matrix(GHMRequest request){
+        DistanceMatrixService matrixService = createMatrix();
+        return matrixService.calculateMatrix(request);
     }
 }

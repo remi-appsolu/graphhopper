@@ -223,6 +223,12 @@ public class GraphHopperWeb implements GraphHopperAPI {
         }
     }
 
+    @Override
+    public MatrixResponse matrix(GHMRequest request) {
+        // TODO remi
+        return null;
+    }
+
     OkHttpClient getClientForRequest(GHRequest request) {
         OkHttpClient client = this.downloader;
         if (request.getHints().has(TIMEOUT)) {

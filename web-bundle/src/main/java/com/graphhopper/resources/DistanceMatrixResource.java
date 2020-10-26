@@ -21,9 +21,10 @@ import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopperAPI;
 import com.graphhopper.MultiException;
-import com.graphhopper.api.GHMRequest;
 import com.graphhopper.http.GHPointParam;
 import com.graphhopper.http.WebHelper;
+import com.graphhopper.api.GHMRequest;
+import com.graphhopper.api.MatrixResponse;
 import com.graphhopper.routing.ProfileResolver;
 import com.graphhopper.util.*;
 import com.graphhopper.util.gpx.GpxFromInstructions;
@@ -52,17 +53,17 @@ import static java.util.stream.Collectors.toList;
  *
  * @author Peter Karich
  */
-@Path("route")
-public class RouteResource {
+@Path("matrix")
+public class DistanceMatrixResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(RouteResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistanceMatrixResource.class);
 
     private final GraphHopperAPI graphHopper;
     private final ProfileResolver profileResolver;
     private final Boolean hasElevation;
 
     @Inject
-    public RouteResource(GraphHopperAPI graphHopper, ProfileResolver profileResolver, @Named("hasElevation") Boolean hasElevation) {
+    public DistanceMatrixResource(GraphHopperAPI graphHopper, ProfileResolver profileResolver, @Named("hasElevation") Boolean hasElevation) {
         this.graphHopper = graphHopper;
         this.profileResolver = profileResolver;
         this.hasElevation = hasElevation;
@@ -157,29 +158,20 @@ public class RouteResource {
         }
     }
 
-    @Inject
-    private DistanceMatrixResource distanceMatrixResource;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response doPost(@NotNull GHMRequest request, @Context HttpServletRequest httpReq) {
-        // REMI : workaround mauvais chemin dans librairie cliente
-        if (request.getFromPoints() != null && request.getFromPoints().size() > 0 && request.getToPoints() != null && request.getToPoints().size() > 0){
-            return distanceMatrixResource.doPost(request, httpReq);
-        }
-
-
         StopWatch sw = new StopWatch().start();
         String weightingVehicleLogStr = "weighting: " + request.getHints().getString("weighting", "")
                 + ", vehicle: " + request.getHints().getString("vehicle", "");
         if (Helper.isEmpty(request.getProfile())) {
-            enableEdgeBasedIfThereAreCurbsides(request.getCurbsides(), request);
+            //enableEdgeBasedIfThereAreCurbsides(request.getCurbsides(), request);
             request.setProfile(profileResolver.resolveProfile(request.getHints()).getName());
             removeLegacyParameters(request.getHints());
         }
         errorIfLegacyParameters(request.getHints());
-        GHResponse ghResponse = graphHopper.route(request);
+        MatrixResponse ghResponse = graphHopper.matrix(request);
         boolean instructions = request.getHints().getBool(INSTRUCTIONS, true);
         boolean enableElevation = request.getHints().getBool("elevation", false);
         boolean calcPoints = request.getHints().getBool(CALC_POINTS, true);
@@ -196,13 +188,14 @@ public class RouteResource {
             logger.error(logStr + ", errors:" + ghResponse.getErrors());
             throw new MultiException(ghResponse.getErrors());
         } else {
-            logger.info(logStr + ", alternatives: " + ghResponse.getAll().size()
+            /*logger.info(logStr + ", alternatives: " + ghResponse.getAll().size()
                     + ", distance0: " + ghResponse.getBest().getDistance()
                     + ", weight0: " + ghResponse.getBest().getRouteWeight()
                     + ", time0: " + Math.round(ghResponse.getBest().getTime() / 60000f) + "min"
                     + ", points0: " + ghResponse.getBest().getPoints().getSize()
                     + ", debugInfo: " + ghResponse.getDebugInfo());
-            return Response.ok(WebHelper.jsonObject(ghResponse, instructions, calcPoints, enableElevation, pointsEncoded, took)).
+            */
+            return Response.ok(ghResponse /*WebHelper.jsonObject(ghResponse, instructions, calcPoints, enableElevation, pointsEncoded, took)*/).
                     header("X-GH-Took", "" + Math.round(took)).
                     type(MediaType.APPLICATION_JSON).
                     build();
