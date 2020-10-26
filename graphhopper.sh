@@ -243,7 +243,8 @@ else
    LINK="http://download.geofabrik.de/$LINK-latest.osm.pbf"
 fi
 
-: "${JAVA_OPTS:=-Xmx8000m -Xms8000m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000}"
+#: "${JAVA_OPTS:=-Xmx8000m -Xms8000m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000}"
+: "${JAVA_OPTS:=-Xmx8000m -Xms8000m}"
 : "${JAR:=web/target/graphhopper-web-$VERSION.jar}"
 : "${GRAPH:=$DATADIR/$NAME-gh}"
 
