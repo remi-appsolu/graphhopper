@@ -93,7 +93,8 @@ public class OneToOneLoopMatrixAlgorithm extends AbstractMatrixAlgorithm {
 
                 if (path != null){
                     distances[j] = (int) path.getDistance();
-                    times[j] = path.getTime();
+                    // attention, la librairie client multiple par 1000 tout le temps
+                    times[j] = (long) ((double)path.getTime() / 1000d);
                     //if (withWeights) weights[j] = path.getWeight();
                 }
 
