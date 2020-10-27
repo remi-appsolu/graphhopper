@@ -25,6 +25,7 @@ import com.graphhopper.util.details.PathDetailsBuilderFactory;
 import com.graphhopper.util.shapes.GHPoint;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.graphhopper.routing.weighting.Weighting.INFINITE_U_TURN_COSTS;
 import static com.graphhopper.util.Parameters.Algorithms.*;
@@ -174,17 +175,17 @@ public class DistanceMatrixService {
 
         AlgorithmOptions algoOpts = algoOptsBuilder.weighting(weighting).build();*/
 
-        List<Snap> originQNodes = lookupNodes(request.getFromPoints(), algoOpts.getWeighting().getFlagEncoder());
-        List<Snap> destinationQNodes = lookupNodes(request.getToPoints(), algoOpts.getWeighting().getFlagEncoder());
+        List<Snap> originSnaps = lookupNodes(request.getFromPoints(), algoOpts.getWeighting().getFlagEncoder());
+        List<Snap> destinationSnaps = lookupNodes(request.getToPoints(), algoOpts.getWeighting().getFlagEncoder());
 
-        List<Snap> merged = new ArrayList<>(originQNodes);
-        merged.addAll(destinationQNodes);
+        List<Snap> merged = new ArrayList<>(originSnaps.stream().filter(snap -> snap.getClosestEdge() != null).collect(Collectors.toList()));
+        merged.addAll(destinationSnaps.stream().filter(snap -> snap.getClosestEdge() != null).collect(Collectors.toList()));
 
         QueryGraph queryGraph = QueryGraph.create(routingGraph, merged);
 //        queryGraph.lookup(merged);
 
-        int[] originNodes =  mapToNodes(originQNodes);
-        int[] destinationNodes =  mapToNodes(destinationQNodes);
+        int[] originNodes =  mapToNodes(originSnaps);
+        int[] destinationNodes =  mapToNodes(destinationSnaps);
 
         algoOpts.getHints().putObject(INSTRUCTIONS, false);
         algoOpts.getHints().putObject(CALC_POINTS, false);

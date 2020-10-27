@@ -7,6 +7,7 @@ import com.graphhopper.routing.util.TraversalMode;
 //import com.graphhopper.routing.util.Weighting;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
+import com.graphhopper.storage.index.Snap;
 
 import java.util.List;
 
@@ -72,6 +73,12 @@ public class OneToOneLoopMatrixAlgorithm extends AbstractMatrixAlgorithm {
 
             int origin = origins[i];
             for (int j=0;j<destinations.length;j++) {
+                if (origin == Snap.INVALID_NODE || destinations[j] == Snap.INVALID_NODE){
+                    distances[j] = Integer.MAX_VALUE;
+                    times[j] = Long.MAX_VALUE;
+                    continue;
+                }
+
                 Path path = null;
                 if (routingFactory != null) {
                     RoutingAlgorithm algorithm = routingFactory.createAlgo(graph, routingAlgoOptions);
