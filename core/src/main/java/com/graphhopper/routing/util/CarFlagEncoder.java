@@ -106,6 +106,8 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         badSurfaceSpeedMap.add("unpaved");
         badSurfaceSpeedMap.add("compacted");
 
+        // valeurs pour l'allemagne
+        /*
         // autobahn
         defaultSpeedMap.put("motorway", 100);
         defaultSpeedMap.put("motorway_link", 70);
@@ -131,6 +133,54 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         defaultSpeedMap.put("road", 20);
         // forestry stuff
         defaultSpeedMap.put("track", 15);
+
+
+         */
+
+        /*
+
+        Selopn wikipedia :
+        highway=* 	maxspeeds in km/h 	comment
+        urban 	interurban
+        highway=motorway 	--- 	130 	110 km/h in rain!
+        highway=trunk 	110 	110 	100 km/h in rain!
+        highway=trunk_link 	110 	110 	100 km/h in rain!
+        highway=primary 	50 	80 or 90 	Depends on the number of lanes. 80 km/h in rain in any case.
+        highway=secondary 	50 	80 or 90 	Depends on the number of lanes. 80 km/h in rain in any case.
+        highway=tertiary 	50 	80 or 90 	Depends on the number of lanes. 80 km/h in rain in any case.
+        highway=residential 	50 	---
+        highway=living_street 	20 	---
+
+         */
+
+        // Valeurs pour la France
+        // autoroute
+        defaultSpeedMap.put("motorway", 30);
+        defaultSpeedMap.put("motorway_link", 70);
+        defaultSpeedMap.put("motorroad", 80);
+        // Nationale
+        defaultSpeedMap.put("trunk", 70);
+        defaultSpeedMap.put("trunk_link", 65);
+        // linking bigger town
+        defaultSpeedMap.put("primary", 65);
+        defaultSpeedMap.put("primary_link", 60);
+        // linking towns + villages
+        defaultSpeedMap.put("secondary", 50);
+        defaultSpeedMap.put("secondary_link", 40);
+        // streets without middle line separation
+        defaultSpeedMap.put("tertiary", 40);
+        defaultSpeedMap.put("tertiary_link", 40);
+        defaultSpeedMap.put("unclassified", 30);
+        defaultSpeedMap.put("residential", 30);
+        // spielstraße
+        defaultSpeedMap.put("living_street", 5);
+        defaultSpeedMap.put("service", 20);
+        // unknown road
+        defaultSpeedMap.put("road", 20);
+        // forestry stuff
+        defaultSpeedMap.put("track", 15);
+
+
 
         trackTypeSpeedMap.put("grade1", 20); // paved
         trackTypeSpeedMap.put("grade2", 15); // now unpaved - gravel mixed with ...
