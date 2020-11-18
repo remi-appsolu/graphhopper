@@ -1,7 +1,14 @@
 #!/bin/sh
 
-service graphhopper stop
+echo "Stopping service"
+service graphhopper stop || exit 1
+
 cd /opt/graphhopper
-git pull
-./graphhopper.sh build
+echo "Pulling new code"
+git pull || exit 1
+
+echo "Pull finished, building"
+./graphhopper.sh build || exit 1
+
+echo "Build finished, starting service"
 service graphhopper start
