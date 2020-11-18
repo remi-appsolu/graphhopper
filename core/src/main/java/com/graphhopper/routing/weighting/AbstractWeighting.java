@@ -78,7 +78,7 @@ public abstract class AbstractWeighting implements Weighting {
 
         // AJOUT REMI : la vitesse semble trop optimiste
         if (speed > 5 ){
-            if (speed <= 50) speed -=10;
+            if (speed <= 50 && speed > 10) speed -=10;
             else speed -=5;
         }
 
