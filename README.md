@@ -5,6 +5,15 @@
 GraphHopper is a fast and memory efficient Java routing engine, released under Apache License 2.0.
 By default it uses OpenStreetMap and GTFS data, but it can import other data sources.
 
+#Modifications  par Rémi
+ * ajout d'api distance matrix
+ * customization du profil voiture pour la france (vitesse) et les voies de taxi
+ 
+#Notes Rémi
+ * Pour compiler : ./graphhopper.sh build
+ * Pour lancer : ./graphhopper.sh -a web -i europe_france.pbf graphhopper
+ * Si modification de profil de routing (dans fichier CarFlagEncoder.java) il est nécessaire de recréer le cache, et donc de supprimer le dossier europe-france-gh, puis relancer graphhopper 
+
 # Community
 
 We have a prospering community and welcome everyone. Let us know your problems, use cases or just [say hello](https://discuss.graphhopper.com/). Please see our [community guidelines](https://graphhopper.com/agreements/cccoc.html).

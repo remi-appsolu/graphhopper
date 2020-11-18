@@ -106,6 +106,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         badSurfaceSpeedMap.add("unpaved");
         badSurfaceSpeedMap.add("compacted");
 
+
         // valeurs pour l'allemagne
         /*
         // autobahn
@@ -179,6 +180,21 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         defaultSpeedMap.put("road", 20);
         // forestry stuff
         defaultSpeedMap.put("track", 15);
+
+        // voies de taxi
+        // doc OSM : https://wiki.openstreetmap.org/wiki/Key:access
+        // et aussi (et surtout) https://wiki.openstreetmap.org/wiki/Key:highway
+        // aussi : https://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Access_restrictions
+        //defaultSpeedMap.put("cycleway", 25);
+        //defaultSpeedMap.put("pedestrian", 25);
+        defaultSpeedMap.put("path", 25);
+        //defaultSpeedMap.put("footway", 25);
+        defaultSpeedMap.put("busway", 30);
+        defaultSpeedMap.put("bus_guideway", 30);
+        defaultSpeedMap.put("share_busway", 30);
+        defaultSpeedMap.put("bridleway", 15);
+        defaultSpeedMap.put("turning_circle", 10);
+
 
 
 
@@ -261,6 +277,13 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
 
         if (!defaultSpeedMap.containsKey(highwayValue))
             return EncodingManager.Access.CAN_SKIP;
+
+        // Ajout REMI : autorisation des voies de bus etc pour taxis
+        if ((way.hasTag("psv", intendedValues) ||
+                way.hasTag("taxi", "yes") /*||
+                way.hasTag("highway", "service")*/)) {
+            return EncodingManager.Access.WAY;
+        }
 
         if (way.hasTag("impassable", "yes") || way.hasTag("status", "impassable"))
             return EncodingManager.Access.CAN_SKIP;
