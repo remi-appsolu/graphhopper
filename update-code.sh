@@ -12,3 +12,5 @@ echo "Pull finished, building"
 
 echo "Build finished, starting service"
 service graphhopper start
+
+systemctl status graphhopper

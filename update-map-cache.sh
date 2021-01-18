@@ -1,18 +1,20 @@
 #!/bin/sh
 
+map="europe"
+
 cd /opt/graphhopper
-rm -f europe_france-gh.tar.xz
+rm -f $map-gh.tar.xz
 
 echo "Downloading new map cache"
-wget http://stockage.taxi.appsolu.net/static/routing/europe_france-gh.tar.xz
-rm -fr europe_france-gh.old
+wget http://stockage.taxi.appsolu.net/static/routing/$map-gh.tar.xz
+rm -fr $map-gh.old
 
 echo "download done, stopping service"
 service graphhopper stop
-mv europe_france-gh europe_france-gh.old
+mv $map-gh $map-gh.old
 
 echo "Extracting cache"
-tar -xJf europe_france-gh.tar.xz && rm -f europe_france-gh.tar.xz
+tar -xJf$map-gh.tar.xz && rm -f $map-gh.tar.xz
 
 echo "Restarting service"
 service graphhopper start
