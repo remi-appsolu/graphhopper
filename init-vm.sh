@@ -18,7 +18,7 @@ if [ -f "/opt/graphhopper/$map.pbf" ]; then
 	echo "/opt/graphhopper/$map.pbf deja présent"
 else
 	echo "downloading $map.pbf"
-	wget http://stockage.taxi.appsolu.net/static/routing/europe_france.pbf
+	wget http://stockage.taxi.appsolu.net/static/routing/$map.pbf
 	echo "downloaded $map.pbf"
 fi
 
@@ -40,7 +40,7 @@ echo "Building GraphHopper"
 echo "Builded GraphHopper"
 
 # pour demarrage direct
-#./graphhopper.sh -a web -i europe_france.pbf
+#./graphhopper.sh -a web -i europe.pbf
 
 # pour demarrage par service
 cp /opt/graphhopper/graphhopper.service /etc/systemd/system/
