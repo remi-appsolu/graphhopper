@@ -11,25 +11,27 @@ git clone -q https://github.com/remi-appsolu/graphhopper.git/
 cd /opt/graphhopper
 git checkout 2.x
 
+map="europe"
 
-if [ -f "/opt/graphhopper/europe_france.pbf" ]; then
-	echo "/opt/graphhopper/europe_france.pbf deja présent"
+
+if [ -f "/opt/graphhopper/$map.pbf" ]; then
+	echo "/opt/graphhopper/$map.pbf deja présent"
 else
-	echo "downloading europe_france.pbf"
+	echo "downloading $map.pbf"
 	wget http://stockage.taxi.appsolu.net/static/routing/europe_france.pbf
-	echo "downloaded europe_france.pbf"
+	echo "downloaded $map.pbf"
 fi
 
-if [ -d "/opt/graphhopper/europe_france-gh" ]; then
-	echo "/opt/graphhopper/europe_france-gh deja présent"
+if [ -d "/opt/graphhopper/$map-gh" ]; then
+	echo "/opt/graphhopper/$map-gh deja présent"
 else
 
-	echo "downloading europe_france-gh.tar.xz"
-	wget http://stockage.taxi.appsolu.net/static/routing/europe_france-gh.tar.xz
+	echo "downloading $map-gh.tar.xz"
+	wget http://stockage.taxi.appsolu.net/static/routing/$map-gh.tar.xz
 
-	echo "downloaded europe_france-gh.tar.xz, extracting"
-	tar -xJf europe_france-gh.tar.xz && rm -f europe_france-gh.tar.xz
-	echo "extracted europe_france-gh.tar.xz"
+	echo "downloaded $map-gh.tar.xz, extracting"
+	tar -xJf $map-gh.tar.xz && rm -f $map-gh.tar.xz
+	echo "extracted $map-gh.tar.xz"
 fi
 
 

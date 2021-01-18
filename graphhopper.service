@@ -10,7 +10,7 @@ Type=simple
 WorkingDirectory=/opt/graphhopper
 User=root
 ;EnvironmentFile=-/etc/graphhopper.conf
-ExecStart=/opt/graphhopper/graphhopper.sh -a web -i /opt/graphhopper/europe_france.pbf graphhopper 
+ExecStart=/opt/graphhopper/graphhopper.sh -a web -i /opt/graphhopper/europe.pbf graphhopper 
 ;ExecStop=/bin/kill -TERM \$MAINPID
 TimeoutSec=300
 
