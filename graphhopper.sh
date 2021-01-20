@@ -244,7 +244,10 @@ else
 fi
 
 #: "${JAVA_OPTS:=-Xmx8000m -Xms8000m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000}"
-: "${JAVA_OPTS:=-Xmx8000m -Xms8000m}"
+# pour generer la map europe :
+#: "${JAVA_OPTS:=-Xmx30000m -Xms30000m}"
+#suffisant pour lancer le serveur a priori
+: "${JAVA_OPTS:=-Xmx15000m -Xms15000m}"
 : "${JAR:=web/target/graphhopper-web-$VERSION.jar}"
 : "${GRAPH:=$DATADIR/$NAME-gh}"
 
