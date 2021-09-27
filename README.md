@@ -8,10 +8,13 @@ By default it uses OpenStreetMap and GTFS data, but it can import other data sou
 #Modifications  par Rémi
  * ajout d'api distance matrix
  * customization du profil voiture pour la france (vitesse) et les voies de taxi
+ * On considère que les poteaux (bollards) pouvant être enlevés sont franchissables (Pb rue Jean Macé Cannes)
  
 #Notes Rémi
+ * Télécharger les maps à partir de geofabrik : https://download.geofabrik.de/
  * Pour compiler : ./graphhopper.sh build
  * Pour lancer : ./graphhopper.sh -a web -i europe_france.pbf graphhopper
+ * Pour lancer uniquement paca : ./graphhopper.sh -a web -i provence-alpes-cote-d-azur-latest.pbf graphhopper 
  * Si modification de profil de routing (dans fichier CarFlagEncoder.java) il est nécessaire de recréer le cache, et donc de supprimer le dossier europe-france-gh, puis relancer graphhopper 
 
 # Community
