@@ -188,6 +188,8 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         //defaultSpeedMap.put("cycleway", 25);
         //defaultSpeedMap.put("pedestrian", 25);
         defaultSpeedMap.put("path", 25);
+        // https://wiki.openstreetmap.org/wiki/FR:Tag:highway=pedestrian?uselang=fr
+        // note : Les chemins trop étroits pour permettre aux voitures de passer (pas de véritables rues) doivent utiliser highway=footway à la place.
         //defaultSpeedMap.put("footway", 25);
         defaultSpeedMap.put("busway", 30);
         defaultSpeedMap.put("bus_guideway", 30);
