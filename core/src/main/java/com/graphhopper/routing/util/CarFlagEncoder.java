@@ -85,8 +85,12 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         potentialBarriers.add("swing_gate");
         potentialBarriers.add("cattle_grid");
 
+        // REMI : on autorise le fait de passer par dessus les poteaux .... pour le cas de la rue jean macé a cannes
+        // https://wiki.openstreetmap.org/wiki/Tag:barrier=bollard?uselang=en
+        potentialBarriers.add("bollard");
+        removableBollards.add("removable");
+
         absoluteBarriers.add("fence");
-        absoluteBarriers.add("bollard");
         absoluteBarriers.add("stile");
         absoluteBarriers.add("turnstile");
         absoluteBarriers.add("cycle_barrier");

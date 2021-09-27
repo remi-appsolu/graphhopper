@@ -51,6 +51,7 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
     // http://wiki.openstreetmap.org/wiki/Mapfeatures#Barrier
     protected final Set<String> absoluteBarriers = new HashSet<>(5);
     protected final Set<String> potentialBarriers = new HashSet<>(5);
+    protected final Set<String> removableBollards = new HashSet<>(5);
     protected final int speedBits;
     protected final double speedFactor;
     protected double speedDefault;
@@ -184,6 +185,9 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
             boolean locked = false;
             if (node.hasTag("locked", "yes"))
                 locked = true;
+
+            if (node.hasTag("bollard", removableBollards))
+                return 0;
 
             for (String res : restrictions) {
                 if (!locked && node.hasTag(res, intendedValues))
