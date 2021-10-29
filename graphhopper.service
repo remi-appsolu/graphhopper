@@ -13,6 +13,8 @@ User=root
 ExecStart=/opt/graphhopper/graphhopper.sh -a web -i /opt/graphhopper/europe.pbf graphhopper 
 ;ExecStop=/bin/kill -TERM \$MAINPID
 TimeoutSec=300
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
