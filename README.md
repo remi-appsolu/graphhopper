@@ -12,10 +12,21 @@ By default it uses OpenStreetMap and GTFS data, but it can import other data sou
  
 #Notes Rémi
  * Télécharger les maps à partir de geofabrik : https://download.geofabrik.de/
- * Pour compiler : ./graphhopper.sh build
- * Pour lancer : ./graphhopper.sh -a web -i europe_france.pbf graphhopper
- * Pour lancer uniquement paca : ./graphhopper.sh -a web -i provence-alpes-cote-d-azur-latest.pbf graphhopper 
- * Si modification de profil de routing (dans fichier CarFlagEncoder.java) il est nécessaire de recréer le cache, et donc de supprimer le dossier europe-france-gh, puis relancer graphhopper 
+   Exemple : ```wget https://download.geofabrik.de/europe-latest.osm.pbf && mv europe-latest.osm.pbf europe.pbf```
+ * Pour compiler : ```./graphhopper.sh build```
+ * Pour lancer : ```./graphhopper.sh -a web -i europe.pbf graphhopper```
+ * Pour lancer uniquement paca : ```./graphhopper.sh -a web -i provence-alpes-cote-d-azur-latest.pbf graphhopper``` 
+ * Si modification de profil de routing (dans fichier CarFlagEncoder.java) il est nécessaire de recréer le cache, et donc de supprimer le dossier europe-gh, puis relancer graphhopper
+ * Une fois le lancement effectué, l'index va ête créé, lorsque le service est disponible (écoute sur 8888), l'index est pret, il faut l'uploader sur le serveur de stockage pour qu'il soit ensuite récupéré par les serveurs de routing
+    * Compression : ``` ./compress.sh```
+    * Upload : ```./upload.sh```
+    * Upload de la carte complete (si changement de celle-ci uniquement : ```./upload-map.sh```
+  * Mettre à jour les serveurs routing, se logguer via ssh grace a la console google.
+    * Mettre a jour la cartographie complète : ```/opt/graphhopper/update-map.sh```
+    * Mettre a jour le code : ```/opt/graphhopper/update-code.sh```
+    * Mettre a jour seulement le cache (uniquement si regénération a partir du meme .pbf) : ```/opt/graphhopper/update-map-cache.sh```
+    
+    
 
 # Community
 
