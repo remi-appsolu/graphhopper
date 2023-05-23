@@ -1,8 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 # tuto : https://cloud.google.com/load-balancing/docs/https/ext-http-lb-simple?hl=fr#console
 
-apt-get update
+export DEBIAN_FRONTEND=noninteractive
+apt-get update --allow-releaseinfo-change
+apt-get --assume-yes update
 apt-get --assume-yes install xz-utils tar wget git openjdk-11-jdk maven
+
+
+#apt -o Apt::Get::Assume-Yes=true update
+#apt -o Apt::Get::Assume-Yes=true upgrade
+#apt -o Apt::Get::Assume-Yes=true install xz-utils tar wget git openjdk-11-jdk maven
+
 
 mkdir -p /opt
 cd /opt
@@ -47,12 +55,3 @@ cp /opt/graphhopper/graphhopper.service /etc/systemd/system/
 
 systemctl enable graphhopper.service
 systemctl start graphhopper.service
-
-
-#installation des outils de monitoring de google : 
-# doc : https://cloud.google.com/monitoring/agent/installation?_ga=2.180369895.-1992349061.1581631359#agent-install-debian-ubuntu
-curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
-bash add-monitoring-agent-repo.sh
-apt-get update
-apt-get install -y 'stackdriver-agent=6.*'
-service stackdriver-agent status
