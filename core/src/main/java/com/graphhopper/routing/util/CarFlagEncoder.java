@@ -70,6 +70,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         restrictedValues.add("military");
         restrictedValues.add("emergency");
         restrictedValues.add("private");
+        restrictedValues.add("ferry");
 
         blockPrivate(properties.getBool("block_private", true));
         blockFords(properties.getBool("block_fords", false));
