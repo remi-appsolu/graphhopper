@@ -14,7 +14,7 @@ By default it uses OpenStreetMap and GTFS data, but it can import other data sou
  * Télécharger les maps à partir de geofabrik : https://download.geofabrik.de/
    Exemple : ```wget https://download.geofabrik.de/europe-latest.osm.pbf && mv europe-latest.osm.pbf europe.pbf```
  * Pour compiler : ```./graphhopper.sh build```
- * Pour lancer : ```./graphhopper.sh -a web -i europe.pbf graphhopper```
+ * Pour lancer : ```./graphhopper.sh -a web -i europe.pbf graphhopper --port 8080```
  * Pour lancer uniquement paca : ```./graphhopper.sh -a web -i provence-alpes-cote-d-azur-latest.pbf graphhopper``` 
  * Si modification de profil de routing (dans fichier CarFlagEncoder.java) il est nécessaire de recréer le cache, et donc de supprimer le dossier europe-gh, puis relancer graphhopper
  * Une fois le lancement effectué, l'index va ête créé, lorsque le service est disponible (écoute sur 8888), l'index est pret, il faut l'uploader sur le serveur de stockage pour qu'il soit ensuite récupéré par les serveurs de routing

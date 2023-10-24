@@ -64,6 +64,8 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
     // lower values allow more compact representation of the routing graph
     protected int maxPossibleSpeed;
     private boolean blockByDefault = true;
+
+    private boolean blockFerries = true;
     private boolean blockFords = true;
     private boolean registered;
     protected EncodedValueLookup encodedValueLookup;
@@ -136,6 +138,14 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
         }
     }
 
+    protected void blockFerries(boolean blockFerries) {
+        this.blockFerries = blockFerries;
+    }
+
+    public boolean blockFerries() {
+        return blockFerries;
+    }
+
     public ConditionalTagInspector getConditionalTagInspector() {
         return conditionalTagInspector;
     }
@@ -179,6 +189,10 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
         // absolute barriers always block
         if (node.hasTag("barrier", absoluteBarriers))
             return encoderBit;
+
+        if (blockFerries && node.hasTag("route", ferries)) {
+            return encoderBit;
+        }
 
         // movable barriers block if they are not marked as passable
         if (node.hasTag("barrier", potentialBarriers)) {

@@ -70,12 +70,13 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         restrictedValues.add("military");
         restrictedValues.add("emergency");
         restrictedValues.add("private");
-        restrictedValues.add("ferry");
 
         blockPrivate(properties.getBool("block_private", true));
         blockFords(properties.getBool("block_fords", false));
         blockBarriersByDefault(properties.getBool("block_barriers", true));
         setSpeedTwoDirections(properties.getBool("speed_two_directions", false));
+        //REMI : on évite les ferry
+        blockFerries(true);
 
         intendedValues.add("yes");
         intendedValues.add("permissive");
@@ -99,6 +100,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         absoluteBarriers.add("block");
         absoluteBarriers.add("bus_trap");
         absoluteBarriers.add("sump_buster");
+
 
         badSurfaceSpeedMap.add("cobblestone");
         badSurfaceSpeedMap.add("grass_paver");
@@ -269,6 +271,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         String firstValue = way.getFirstPriorityTag(restrictions);
         if (highwayValue == null) {
             if (way.hasTag("route", ferries)) {
+                if (blockFerries()) return EncodingManager.Access.CAN_SKIP;
                 if (restrictedValues.contains(firstValue))
                     return EncodingManager.Access.CAN_SKIP;
                 if (intendedValues.contains(firstValue) ||
