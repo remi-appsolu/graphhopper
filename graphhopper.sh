@@ -247,7 +247,7 @@ fi
 # pour generer la map europe :
 #: "${JAVA_OPTS:=-Xmx55000m -Xms55000m}"
 #suffisant pour lancer le serveur a priori
-: "${JAVA_OPTS:=-Xmx15000m -Xms15000m}"
+: "${JAVA_OPTS:=-Xmx18000m -Xms18000m}"
 : "${JAR:=web/target/graphhopper-web-$VERSION.jar}"
 : "${GRAPH:=$DATADIR/$NAME-gh}"
 
