@@ -293,8 +293,9 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
 
         // Ajout REMI : autorisation des voies de bus etc pour taxis
         if ((way.hasTag("psv", intendedValues) ||
-                way.hasTag("taxi", "yes") /*||
-                way.hasTag("highway", "service")*/)) {
+                way.hasTag("taxi", "yes") ||
+                way.hasTag("busway") ||
+                way.hasTag("highway", "service"))) {
             return EncodingManager.Access.WAY;
         }
 
@@ -377,11 +378,12 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
     }
 
     protected boolean isOneway(ReaderWay way) {
-        return way.hasTag("oneway", oneways)
+        boolean reverseBus = way.hasTag("busway", "opposite_lane");
+        return  (way.hasTag("oneway", oneways)
                 || way.hasTag("vehicle:backward")
                 || way.hasTag("vehicle:forward")
                 || way.hasTag("motor_vehicle:backward")
-                || way.hasTag("motor_vehicle:forward");
+                || way.hasTag("motor_vehicle:forward")) && !reverseBus;
     }
 
     /**
