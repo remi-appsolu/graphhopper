@@ -378,12 +378,11 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
     }
 
     protected boolean isOneway(ReaderWay way) {
-        boolean reverseBus = way.hasTag("busway", "opposite_lane");
         return  (way.hasTag("oneway", oneways)
                 || way.hasTag("vehicle:backward")
                 || way.hasTag("vehicle:forward")
                 || way.hasTag("motor_vehicle:backward")
-                || way.hasTag("motor_vehicle:forward")) && !reverseBus;
+                || way.hasTag("motor_vehicle:forward")) && !way.hasTag("busway", "opposite_lane");
     }
 
     /**
