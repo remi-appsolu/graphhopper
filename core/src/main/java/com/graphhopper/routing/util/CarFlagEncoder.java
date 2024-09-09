@@ -183,7 +183,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
         defaultSpeedMap.put("tertiary_link", 40);
         defaultSpeedMap.put("unclassified", 30);
         defaultSpeedMap.put("residential", 30);
-        // spielstraße
+        // residentiel
         defaultSpeedMap.put("living_street", 5);
         defaultSpeedMap.put("service", 20);
         // unknown road

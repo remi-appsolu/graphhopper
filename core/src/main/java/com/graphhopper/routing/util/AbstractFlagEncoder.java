@@ -203,6 +203,9 @@ public abstract class AbstractFlagEncoder implements FlagEncoder {
             if (node.hasTag("bollard", removableBollards))
                 return 0;
 
+            if (node.hasTag("barrier", "lift_gate"))
+                return 0;
+
             for (String res : restrictions) {
                 if (!locked && node.hasTag(res, intendedValues))
                     return 0;
