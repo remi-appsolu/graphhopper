@@ -293,6 +293,7 @@ public class CarFlagEncoder extends AbstractFlagEncoder {
 
         // Ajout REMI : autorisation des voies de bus etc pour taxis
         if ((way.hasTag("psv", intendedValues) ||
+                way.hasTag("psv", "designated") ||
                 way.hasTag("taxi", "yes") ||
                 way.hasTag("busway"))) {
             return EncodingManager.Access.WAY;
