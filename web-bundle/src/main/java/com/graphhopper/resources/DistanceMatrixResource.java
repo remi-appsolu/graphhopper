@@ -213,7 +213,7 @@ public class DistanceMatrixResource {
         if (hints.has("weighting"))
             throw new IllegalArgumentException("Since you are using the 'profile' parameter, do not use the 'weighting' parameter." +
                     " You used 'weighting=" + hints.getString("weighting", "") + "'");
-        if (hints.has("vehicle"))
+        if (hints.has("vehicle") && !Helper.isEmpty(hints.getString("vehicle", null)))
             throw new IllegalArgumentException("Since you are using the 'profile' parameter, do not use the 'vehicle' parameter." +
                     " You used 'vehicle=" + hints.getString("vehicle", "") + "'");
         if (hints.has("edge_based"))
